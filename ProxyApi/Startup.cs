@@ -21,7 +21,9 @@ namespace ProxyApi
             services.AddMvc();
 
             services.AddSingleton<HttpClient>();
+            services.AddSingleton<ICache, Cache>();
             services.AddSingleton<ImagesProvider>();
+            services.AddSingleton<IImagesProvider, CachedImagesProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

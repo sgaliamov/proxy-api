@@ -23,20 +23,20 @@ namespace ProxyApi.Tests
             var expected = _fixture.Create<Dummy>();
             var key = _fixture.Create<string>();
 
-            var result1 = await _cache.Get(key, () => expected).ConfigureAwait(false);
+            var result1 = await _cache.GetAsync(key, () => Task.FromResult(expected)).ConfigureAwait(false);
             result1.Should().Be(expected);
 
-            var result2 = await _cache.Get<Dummy>(key, () => null).ConfigureAwait(false);
+            var result2 = await _cache.GetAsync<Dummy>(key, () => null).ConfigureAwait(false);
             result2.Should().BeEquivalentTo(expected);
 
-            var result3 = await _cache.Get<Dummy>(key).ConfigureAwait(false);
+            var result3 = await _cache.GetAsync<Dummy>(key).ConfigureAwait(false);
             result3.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task Unknown_Key_Returns_Null()
         {
-            var result = await _cache.Get<object>("unknown").ConfigureAwait(false);
+            var result = await _cache.GetAsync<object>("unknown").ConfigureAwait(false);
             result.Should().BeNull();
         }
 
@@ -46,8 +46,13 @@ namespace ProxyApi.Tests
         // ReSharper disable once ClassNeverInstantiated.Local
         private sealed class Dummy
         {
+            // ReSharper disable UnusedMember.Global
+            // ReSharper disable UnusedMember.Local
             public string Key { get; set; }
+
             public int Value { get; set; }
+            // ReSharper restore UnusedMember.Local
+            // ReSharper restore UnusedMember.Global
         }
     }
 }

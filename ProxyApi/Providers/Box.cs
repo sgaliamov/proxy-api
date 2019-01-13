@@ -22,5 +22,10 @@
 
             return null;
         }
+
+        public override string ToString()
+        {
+            return $"{MaxLatitude},{MaxLongitude},{MinLatitude},{MinLongitude}";
+        }
     }
 }

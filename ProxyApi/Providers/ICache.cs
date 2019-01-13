@@ -5,6 +5,6 @@ namespace ProxyApi.Providers
 {
     public interface ICache
     {
-        Task<T> Get<T>(string key, Func<T> addMethod);
+        Task<T> GetAsync<T>(string key, Func<Task<T>> addMethod = null);
     }
 }

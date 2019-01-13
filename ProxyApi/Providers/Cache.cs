@@ -15,7 +15,7 @@ namespace ProxyApi.Providers
             _redis = ConnectionMultiplexer.Connect(configuration["redis_configuration"]);
         }
 
-        public async Task<T> Get<T>(string key, Func<T> addMethod = null)
+        public async Task<T> GetAsync<T>(string key, Func<Task<T>> addMethod = null)
         {
             var database = _redis.GetDatabase();
             var value = await database.StringGetAsync(key).ConfigureAwait(false);
@@ -29,7 +29,7 @@ namespace ProxyApi.Providers
                 return default;
             }
 
-            var toAdd = addMethod();
+            var toAdd = await addMethod().ConfigureAwait(false);
             var serialized = JsonConvert.SerializeObject(toAdd);
             await database.StringSetAsync(key, serialized).ConfigureAwait(false);
 
