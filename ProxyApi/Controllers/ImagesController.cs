@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProxyApi.Models;
+using ProxyApi.Providers;
 
 namespace ProxyApi.Controllers
 {
@@ -17,7 +18,7 @@ namespace ProxyApi.Controllers
 
         [HttpGet]
         [Route("search")]
-        public async Task<ActionResult> Get(
+        public async Task Get(
             string text,
             int page = 1,
             int? minimumLongitude = null,
@@ -27,9 +28,14 @@ namespace ProxyApi.Controllers
         {
             var box = Box.Create(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude);
 
-            var result = await _imagesProvider.Search(page, text, box).ConfigureAwait(false);
+            var response = await _imagesProvider.Search(page, text, box).ConfigureAwait(false);
 
-            return Ok(result);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            Response.StatusCode = (int)response.StatusCode;
+            Response.ContentType = response.Content.Headers.ContentType.ToString();
+            Response.ContentLength = response.Content.Headers.ContentLength;
+            await Response.WriteAsync(content).ConfigureAwait(false);
         }
     }
 }

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using ProxyApi.Dto;
-using ProxyApi.Models;
 
-namespace ProxyApi
+namespace ProxyApi.Providers
 {
-    public sealed class ImagesProvider
+    public sealed class ImagesProvider : IImagesProvider
     {
         private readonly string _apiKey;
         private readonly HttpClient _httpClient;
@@ -23,36 +19,17 @@ namespace ProxyApi
             _uriBuilder = new UriBuilder("https", "api.flickr.com", 443, "services/rest");
         }
 
-        public async Task<PhotoCollection> Search(int page, string text, Box box = null)
+        public async Task<HttpResponseMessage> Search(int page, string text, Box box = null)
         {
             var uri = BuildUri(page, text, box);
 
-            var response = await Get(uri).ConfigureAwait(false);
-
-            return await Deserialize<PhotoCollection>(response).ConfigureAwait(false);
-        }
-
-        private async Task<HttpResponseMessage> Get(Uri uri)
-        {
-            var response = await _httpClient.GetAsync(uri).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            return response;
-        }
-
-        private static async Task<T> Deserialize<T>(HttpResponseMessage response)
-        {
-            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            using (var reader = new StreamReader(stream))
-            using (var jsonReader = new JsonTextReader(reader))
-            {
-                return JsonSerializer.CreateDefault().Deserialize<T>(jsonReader);
-            }
+            return await _httpClient.GetAsync(uri).ConfigureAwait(false);
         }
 
         private Uri BuildUri(int page, string text, Box box)
         {
             var parameters = HttpUtility.ParseQueryString(string.Empty);
+
             parameters["method"] = "flickr.photos.search";
             parameters["api_key"] = _apiKey;
             parameters["format"] = "json";
