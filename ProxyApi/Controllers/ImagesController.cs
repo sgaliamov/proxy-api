@@ -17,6 +17,19 @@ namespace ProxyApi.Controllers
             _imagesProvider = imagesProvider;
         }
 
+        /// <summary>
+        ///     Return a list of photos matching some criteria.
+        /// </summary>
+        /// <param name="text">
+        ///     A free text search. Photos who's title, description or tags contain the text will be returned. You
+        ///     can exclude results that match a term by pre pending it with a - character.
+        /// </param>
+        /// <param name="page">The page of results to return. If this argument is omitted, it defaults to 1.</param>
+        /// <param name="minLong">A valid latitude, in decimal format, for doing geo queries.</param>
+        /// <param name="minLat">A valid longitude, in decimal format, for doing geo queries.</param>
+        /// <param name="maxLong">A valid longitude, in decimal format, for doing geo queries.</param>
+        /// <param name="maxLat">A valid latitude, in decimal format, for doing geo queries.</param>
+        /// <returns>List of photos.</returns>
         [HttpGet]
         [Route("search")]
         public async Task Search(
@@ -34,6 +47,11 @@ namespace ProxyApi.Controllers
             await WriteResponse(response).ConfigureAwait(false);
         }
 
+        /// <summary>
+        ///     Get information about a photo. The calling user must have permission to view the photo.
+        /// </summary>
+        /// <param name="id">The id of the photo to get information for.</param>
+        /// <returns>Information about a photo.</returns>
         [HttpGet]
         [Route("getInfo")]
         public async Task GetInfo(string id)

@@ -19,6 +19,7 @@ namespace ProxyApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSwaggerDocument();
 
             services.AddSingleton<HttpClient>();
             services.AddSingleton<ICache, Cache>();
@@ -36,6 +37,9 @@ namespace ProxyApi
             {
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUi3();
 
             app.UseMvc();
         }
