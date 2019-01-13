@@ -10,9 +10,9 @@ namespace ProxyApi.Controllers
     [Route("[controller]")]
     public sealed class ImagesController : ControllerBase
     {
-        private readonly IImagesProvider _imagesProvider;
+        private readonly ICachedImagesProvider _imagesProvider;
 
-        public ImagesController(IImagesProvider imagesProvider)
+        public ImagesController(ICachedImagesProvider imagesProvider)
         {
             _imagesProvider = imagesProvider;
         }

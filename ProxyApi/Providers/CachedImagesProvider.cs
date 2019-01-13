@@ -3,12 +3,12 @@ using ProxyApi.Providers.Models;
 
 namespace ProxyApi.Providers
 {
-    public sealed class CachedImagesProvider : IImagesProvider
+    public sealed class CachedImagesProvider : ICachedImagesProvider
     {
         private readonly ICache _cache;
-        private readonly ImagesProvider _provider;
+        private readonly IImagesProvider _provider;
 
-        public CachedImagesProvider(ImagesProvider provider, ICache cache)
+        public CachedImagesProvider(IImagesProvider provider, ICache cache)
         {
             _provider = provider;
             _cache = cache;

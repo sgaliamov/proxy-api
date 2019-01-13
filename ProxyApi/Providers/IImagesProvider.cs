@@ -8,4 +8,6 @@ namespace ProxyApi.Providers
         Task<Response> Search(int page, string text, Box box = null);
         Task<Response> Info(string id);
     }
+
+    public interface ICachedImagesProvider : IImagesProvider { }
 }
