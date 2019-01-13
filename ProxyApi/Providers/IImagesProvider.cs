@@ -1,11 +1,11 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using ProxyApi.Providers.Models;
 
 namespace ProxyApi.Providers
 {
     public interface IImagesProvider
     {
-        Task<HttpResponseMessage> Search(int page, string text, Box box = null);
-        Task<HttpResponseMessage> Info(string id);
+        Task<Response> Search(int page, string text, Box box = null);
+        Task<Response> Info(string id);
     }
 }

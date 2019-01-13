@@ -1,5 +1,5 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using ProxyApi.Providers.Models;
 
 namespace ProxyApi.Providers
 {
@@ -14,39 +14,18 @@ namespace ProxyApi.Providers
             _cache = cache;
         }
 
-        public Task<HttpResponseMessage> Search(int page, string text, Box box = null)
+        public Task<Response> Search(int page, string text, Box box = null)
         {
             return _cache.GetAsync(
                 $"search|{page}|{text}|{box}",
-                async () =>
-                {
-                    var response = await _provider.Search(page, text, box).ConfigureAwait(false);
-
-                    return await ReadContent(response).ConfigureAwait(false);
-                });
+                () => _provider.Search(page, text, box));
         }
 
-        public Task<HttpResponseMessage> Info(string id)
+        public Task<Response> Info(string id)
         {
-            var info = _cache.GetAsync(
+            return _cache.GetAsync(
                 $"info|{id}",
-                async () =>
-                {
-                    var response = await _provider.Info(id).ConfigureAwait(false);
-
-                    return await ReadContent(response).ConfigureAwait(false);
-                });
-
-            return info;
-        }
-
-        private static async Task<HttpResponseMessage> ReadContent(HttpResponseMessage response)
-        {
-            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var responseContent = new StringContent(content);
-            response.Content = responseContent;
-
-            return response;
+                () => _provider.Info(id));
         }
     }
 }

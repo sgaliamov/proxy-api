@@ -1,8 +1,8 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProxyApi.Providers;
+using ProxyApi.Providers.Models;
 
 namespace ProxyApi.Controllers
 {
@@ -31,7 +31,7 @@ namespace ProxyApi.Controllers
 
             var response = await _imagesProvider.Search(page, text, box).ConfigureAwait(false);
 
-            await Proxy(response).ConfigureAwait(false);
+            await WriteResponse(response).ConfigureAwait(false);
         }
 
         [HttpGet]
@@ -40,18 +40,16 @@ namespace ProxyApi.Controllers
         {
             var response = await _imagesProvider.Info(id).ConfigureAwait(false);
 
-            await Proxy(response).ConfigureAwait(false);
+            await WriteResponse(response).ConfigureAwait(false);
         }
 
-        private async Task Proxy(HttpResponseMessage response)
+        private async Task WriteResponse(Response response)
         {
-            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Response.StatusCode = response.StatusCode;
+            Response.ContentType = response.ContentType;
+            Response.ContentLength = response.Content.Length;
 
-            Response.StatusCode = (int)response.StatusCode;
-            Response.ContentType = response.Content.Headers.ContentType.ToString();
-            Response.ContentLength = response.Content.Headers.ContentLength;
-
-            await Response.WriteAsync(content).ConfigureAwait(false);
+            await Response.WriteAsync(response.Content).ConfigureAwait(false);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ProxyApi.Providers
+﻿namespace ProxyApi.Providers.Models
 {
     public sealed class Box
     {

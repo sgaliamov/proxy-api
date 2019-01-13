@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Configuration;
+using ProxyApi.Providers.Models;
 
 namespace ProxyApi.Providers
 {
@@ -20,18 +21,30 @@ namespace ProxyApi.Providers
             _uriBuilder = new UriBuilder("https", "api.flickr.com", 443, "services/rest");
         }
 
-        public async Task<HttpResponseMessage> Search(int page, string text, Box box = null)
+        public async Task<Response> Search(int page, string text, Box box = null)
         {
             var uri = BuildSearchUri(page, text, box);
 
-            return await _httpClient.GetAsync(uri).ConfigureAwait(false);
+            return await GetResponse(uri).ConfigureAwait(false);
         }
 
-        public async Task<HttpResponseMessage> Info(string id)
+        public async Task<Response> Info(string id)
         {
             var uri = BuildInfoUri(id);
 
-            return await _httpClient.GetAsync(uri).ConfigureAwait(false);
+            return await GetResponse(uri).ConfigureAwait(false);
+        }
+
+        private async Task<Response> GetResponse(Uri uri)
+        {
+            var response = await _httpClient.GetAsync(uri).ConfigureAwait(false);
+
+            return new Response
+            {
+                Content = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
+                ContentType = response.Content.Headers.ContentType.ToString(),
+                StatusCode = (int)response.StatusCode
+            };
         }
 
         private Uri BuildInfoUri(string id)
