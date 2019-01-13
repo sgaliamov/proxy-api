@@ -1,4 +1,6 @@
-﻿namespace ProxyApi.Providers.Models
+﻿using System.Globalization;
+
+namespace ProxyApi.Providers.Models
 {
     public sealed class Box
     {
@@ -23,9 +25,15 @@
             return null;
         }
 
-        public override string ToString()
+        public string ToBbox()
         {
-            return $"{MaxLatitude},{MaxLongitude},{MinLatitude},{MinLongitude}";
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "{0},{1},{2},{3}",
+                MinLongitude,
+                MinLatitude,
+                MaxLongitude,
+                MaxLatitude);
         }
     }
 }

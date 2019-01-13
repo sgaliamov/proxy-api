@@ -17,7 +17,7 @@ namespace ProxyApi.Providers
         public Task<Response> Search(int page, string text, Box box = null)
         {
             return _cache.GetAsync(
-                $"search|{page}|{text}|{box}",
+                $"search|{page}|{text}|{box?.ToBbox()}",
                 () => _provider.Search(page, text, box));
         }
 

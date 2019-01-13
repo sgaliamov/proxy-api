@@ -38,6 +38,7 @@ namespace ProxyApi.Providers
         private async Task<Response> GetResponse(Uri uri)
         {
             var response = await _httpClient.GetAsync(uri).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
 
             return new Response
             {
@@ -65,7 +66,7 @@ namespace ProxyApi.Providers
 
             if (box != null)
             {
-                parameters["bbox"] = $"{box.MinLongitude},{box.MinLatitude},{box.MaxLongitude},{box.MaxLatitude}";
+                parameters["bbox"] = box.ToBbox();
             }
 
             _uriBuilder.Query = parameters.ToString();

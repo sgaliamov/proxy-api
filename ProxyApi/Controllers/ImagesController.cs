@@ -22,12 +22,12 @@ namespace ProxyApi.Controllers
         public async Task Search(
             string text,
             int page = 1,
-            int? minimumLongitude = null,
-            int? minimumLatitude = null,
-            int? maximumLongitude = null,
-            int? maximumLatitude = null)
+            float? minLong = null,
+            float? minLat = null,
+            float? maxLong = null,
+            float? maxLat = null)
         {
-            var box = Box.Create(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude);
+            var box = Box.Create(minLong, minLat, maxLong, maxLat);
 
             var response = await _imagesProvider.Search(page, text, box).ConfigureAwait(false);
 
