@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyApi", "ProxyApi\ProxyApi.csproj", "{45E28541-E665-4B87-9C34-918AE6ADEBCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxyApi", "ProxyApi\ProxyApi.csproj", "{45E28541-E665-4B87-9C34-918AE6ADEBCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{B29C2905-3CCB-4D85-8809-A30B5E2ECE8B}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

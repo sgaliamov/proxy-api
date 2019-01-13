@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "?user_id=100000",
+      "launchUrl": "images/search/?text=test",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "ProxyApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "?user_id=100000",
+      "launchUrl": "images/search/?text=test",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

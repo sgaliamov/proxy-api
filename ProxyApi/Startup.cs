@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Net.Http;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProxyKit;
 
 namespace ProxyApi
 {
@@ -17,26 +17,24 @@ namespace ProxyApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddProxy();
+            services.AddMvc();
+
+            services.AddSingleton<HttpClient>();
+            services.AddSingleton<ImagesProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.RunProxy(async context =>
+            if (env.IsDevelopment())
             {
-                context.Request.QueryString = context
-                                              .Request
-                                              .QueryString
-                                              .Add("method", "flickr.photos.search")
-                                              .Add("api_key", "e323e04846805cdcaca5e8cfbd341967")
-                                              .Add("format", "rest");
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
 
-                var result = await context
-                                   .ForwardTo("https://api.flickr.com/services/rest/")
-                                   .Execute();
-
-                return result;
-            });
+            app.UseMvc();
         }
     }
 }
