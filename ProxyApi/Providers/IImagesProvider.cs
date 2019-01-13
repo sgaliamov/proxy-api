@@ -6,5 +6,6 @@ namespace ProxyApi.Providers
     public interface IImagesProvider
     {
         Task<HttpResponseMessage> Search(int page, string text, Box box = null);
+        Task<HttpResponseMessage> Info(string id);
     }
 }

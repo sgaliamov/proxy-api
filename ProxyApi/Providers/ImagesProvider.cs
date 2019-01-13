@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,21 +22,33 @@ namespace ProxyApi.Providers
 
         public async Task<HttpResponseMessage> Search(int page, string text, Box box = null)
         {
-            var uri = BuildUri(page, text, box);
+            var uri = BuildSearchUri(page, text, box);
 
             return await _httpClient.GetAsync(uri).ConfigureAwait(false);
         }
 
-        private Uri BuildUri(int page, string text, Box box)
+        public async Task<HttpResponseMessage> Info(string id)
         {
-            var parameters = HttpUtility.ParseQueryString(string.Empty);
+            var uri = BuildInfoUri(id);
 
-            parameters["method"] = "flickr.photos.search";
-            parameters["api_key"] = _apiKey;
-            parameters["format"] = "json";
+            return await _httpClient.GetAsync(uri).ConfigureAwait(false);
+        }
+
+        private Uri BuildInfoUri(string id)
+        {
+            var parameters = BuildCommonParameters("flickr.photos.getInfo");
+            parameters["photo_id"] = id;
+
+            _uriBuilder.Query = parameters.ToString();
+
+            return _uriBuilder.Uri;
+        }
+
+        private Uri BuildSearchUri(int page, string text, Box box)
+        {
+            var parameters = BuildCommonParameters("flickr.photos.search");
             parameters["text"] = text;
             parameters["page"] = page.ToString();
-            parameters["nojsoncallback"] = "1";
 
             if (box != null)
             {
@@ -45,6 +58,18 @@ namespace ProxyApi.Providers
             _uriBuilder.Query = parameters.ToString();
 
             return _uriBuilder.Uri;
+        }
+
+        private NameValueCollection BuildCommonParameters(string method)
+        {
+            var parameters = HttpUtility.ParseQueryString(string.Empty);
+
+            parameters["method"] = method;
+            parameters["api_key"] = _apiKey;
+            parameters["format"] = "json";
+            parameters["nojsoncallback"] = "1";
+
+            return parameters;
         }
     }
 }
